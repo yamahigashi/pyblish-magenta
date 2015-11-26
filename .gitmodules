@@ -1,0 +1,6 @@
+[submodule "pyblish_magenta/vendor/anyconfig"]
+	path = pyblish_magenta/vendor/anyconfig
+	url = https://github.com/ssato/python-anyconfig
+[submodule "pyblish_magenta/vendor/toml"]
+	path = pyblish_magenta/vendor/toml
+	url = https://github.com/uiri/toml.git
