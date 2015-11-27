@@ -1,0 +1,17 @@
+title = "pyblish multi projects support test config"
+
+
+[work]
+# task: "modeling, animation, bg"
+task = "modeling"
+
+
+[project]
+
+[project.merlin]
+# directory:
+#   don not use backslash but SLASH
+directory = "D:/pyblish_test/projects/avit"
+
+[project.microhard]
+directory = "D:/pyblish_test/projects/microhard"
