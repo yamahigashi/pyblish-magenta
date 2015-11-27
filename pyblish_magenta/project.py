@@ -67,7 +67,7 @@ class ProjectEnv(object):
             os.path.join(cls.get_current_project(), cls.config_path))
 
         if not os.path.exists(conf_path):
-            print "config does not exists in {}".format(conf_path)
+            print "config does not exists in {0}".format(conf_path)
 
         try:
             print conf_path

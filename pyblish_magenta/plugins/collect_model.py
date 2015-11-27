@@ -1,23 +1,40 @@
+# -*- coding: utf-8 -*-
+
 import os
 import pyblish.api
 import pyblish_maya
 
+import pyblish_magenta.schema
+
 
 @pyblish.api.log
 class CollectModel(pyblish.api.Collector):
-    """Inject all models from the scene into the context"""
+    """ context へシーン中のモデルを全て注入する. """
 
     def process(self, context):
         from maya import cmds
 
-        if not os.environ["TASK"] == "modeling":
+        schema = pyblish_magenta.schema.load()
+        tester = schema.get_template("test_asset")
+        fpath = cmds.file(query=True, expandName=True)
+        fpath.replace("\\", "/")
+        holders = tester.parse(fpath)
+        model_name = holders['asset'].split('.')[0]
+
+        if "modeling" not in os.environ["TASK"].split(','):
             return self.log.info("No model found")
 
-        name = os.environ["ITEM"]
+        if 'genre' not in holders:
+            self.log.info("No genre found")
+        elif "model" not in holders['genre']:
+            self.log.info("Asset's genre not modeling")
+
+        name = model_name  # holders['container']
+        os.environ['ITEM'] =  holders['container']
 
         # Get the root transform
         self.log.info("Model found: %s" % name)
-        assembly = "|%s_GRP" % name
+        assembly = "|root_%s" % name
 
         assert cmds.objExists(assembly), (
             "Model did not have an appropriate assembly: %s" % assembly)

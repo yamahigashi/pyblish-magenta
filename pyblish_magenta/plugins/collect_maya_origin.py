@@ -14,7 +14,11 @@ class CollectMayaOrigin(pyblish.api.Collector):
         if "origin" not in context:
             context.create_instance("origin", family="metadata")
 
+        fname = cmds.file(query=True, expandName=True)
         instance = context["origin"]
+        instance.set_data("metadata", {
+            "filename": fname
+        })
 
         self.log.debug("Loading schema..")
         schema = pyblish_magenta.schema.load()

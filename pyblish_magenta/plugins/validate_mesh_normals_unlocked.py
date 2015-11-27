@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import pyblish.api
 from maya import cmds
 
@@ -13,6 +14,8 @@ class ValidateMeshNormalsUnlocked(pyblish.api.Validator):
     def has_locked_normals(self, mesh):
 
         mesh_vertexface = cmds.polyListComponentConversion(mesh, toVertexFace=True)
+        if not mesh_vertexface:
+            return False
         locked_normals = cmds.polyNormalPerVertex(mesh_vertexface, q=1, freezeNormal=True)
         if any(locked_normals):
             return True

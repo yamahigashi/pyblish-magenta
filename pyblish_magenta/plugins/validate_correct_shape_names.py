@@ -3,9 +3,25 @@ import re
 import pyblish.api
 from maya import cmds
 
+from pyblish_magenta.project import ProjectEnv
+
 
 def short_name(node):
     return node.rsplit("|", 1)[-1].rsplit(":", 1)[-1]
+
+
+'''
+class SelectAffected(pyblish.api.Actions):
+    label = "select affected"
+
+    def process(self, context):
+        print "hoeuuacueo"
+        for result in context.data["results"]:
+            if result["error"] is None:
+                continue
+
+            instance = result["instance"]
+'''
 
 
 class ValidateCorrectShapeNames(pyblish.api.Validator):
@@ -35,6 +51,7 @@ class ValidateCorrectShapeNames(pyblish.api.Validator):
     optional = True
     version = (0, 1, 0)
     label = "Shape Default Naming"
+    config_key = "modeling.shapename"
 
     def _define_default_name(self, shape):
         transform = short_name(cmds.listRelatives(shape, parent=True, fullPath=True)[0])
@@ -54,6 +71,10 @@ class ValidateCorrectShapeNames(pyblish.api.Validator):
         transform_no_num = transform_name.rstrip("0123456789")
         pattern = '^{transform}[0-9]*Shape[0-9]*$'.format(
             transform=transform_no_num)
+
+        config = ProjectEnv.get_config(self.config_key)
+        if config is not None and "pattern" in config:
+            pattern = config["pattern"]
 
         if re.match(pattern, shape_name):
             return True
