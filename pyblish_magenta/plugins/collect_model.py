@@ -4,12 +4,16 @@ import os
 import pyblish.api
 import pyblish_maya
 
+import lucidity
 import pyblish_magenta.schema
+from pyblish_magenta.project import ProjectEnv
 
 
 @pyblish.api.log
 class CollectModel(pyblish.api.Collector):
     """ context へシーン中のモデルを全て注入する. """
+
+    config_key = "modeling"
 
     def process(self, context):
         from maya import cmds
@@ -34,7 +38,8 @@ class CollectModel(pyblish.api.Collector):
 
         # Get the root transform
         self.log.info("Model found: %s" % name)
-        assembly = "|root_%s" % name
+        pattern = ProjectEnv.get_config(self.config_key)['root_node_name_pattern']
+        assembly = pattern.format(name=name)
 
         assert cmds.objExists(assembly), (
             "Model did not have an appropriate assembly: %s" % assembly)
